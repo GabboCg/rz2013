@@ -2,6 +2,6 @@
 
 Code and analysis replicating Rapach and Zhou (2013), including predictive regressions, model combinations, and out-of-sample evaluation of equity return forecasts.
 
-## Overview
+## Overview
 
 [Paper Link](https://www.sciencedirect.com/science/article/pii/B9780444536839000062)
