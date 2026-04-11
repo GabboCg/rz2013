@@ -90,4 +90,4 @@ figure6_1.R
 
 ## References
 
-1. Rapach, D. E., and Zhou, G. (2013). Forecasting stock returns. In G. Elliott and A. Timmermann (Eds.), *Handbook of Economic Forecasting*, Vol. 2A, pp. 328–383. Elsevier.
+* Rapach, D. E., and Zhou, G. (2013). Forecasting stock returns. In G. Elliott and A. Timmermann (Eds.), *Handbook of Economic Forecasting*, Vol. 2A, pp. 328–383. Elsevier.
