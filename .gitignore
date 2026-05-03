@@ -1,9 +1,16 @@
-.Rproj.user
+# R
 .Rhistory
 .RData
 .Ruserdata
+*.Rproj.user/
+
+# macOS
+.DS_Store
+
+# Docs
+docs/
+refs/*
+
+.Rproj.user
 
 CLAUDE.md
-.DS_Store 
-
-refs/*
