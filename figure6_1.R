@@ -1,18 +1,27 @@
-#'---
-#' title: Figure 6.1 – Cumulative Differences in Squared Forecast Errors
-#'         Monthly U.S. Equity Premium, Individual Economic Variables, 1957:01–2010:12
-#'
-#' Rapach & Zhou (2013), Chapter 6, Handbook of Economic Forecasting Vol. 2A
-#'
-#' Black lines: unrestricted predictive regression forecast (Panel A of Table 6.1)
-#' Gray lines:  Campbell & Thompson (2008) sign-restricted forecast (Panel B)
-#' Shaded bars: NBER-dated recessions
-#'
-#' CDSFE_{j,tau} = sum_{s=1}^{tau} (e_HA,s)^2 - sum_{s=1}^{tau} (e_j,s)^2   [eq. 47]
-#' Positive = predictive regression beats historical average in MSFE up to tau.
-#'
-#' Run data_prep.R first to generate data/rz2013_data.rds.
-#'---
+#!/usr/bin/env Rscript
+# ======================================================== #
+#
+#                  Replication of Figure 1
+#
+#                 Gabriel E. Cabrera-Guzmán
+#                The University of Manchester
+#
+#                        Spring, 2026
+#
+#                https://gcabrerag.rbind.io
+#
+# ------------------------------ #
+# email: gabriel.cabreraguzman@postgrad.manchester.ac.uk
+# ======================================================== #
+
+# Black lines: unrestricted predictive regression forecast (Panel A of Table 6.1)
+# Gray lines:  Campbell & Thompson (2008) sign-restricted forecast (Panel B)
+# Shaded bars: NBER-dated recessions
+#
+# CDSFE_{j,tau} = sum_{s=1}^{tau} (e_HA,s)^2 - sum_{s=1}^{tau} (e_j,s)^2   [eq. 47]
+# Positive = predictive regression beats historical average in MSFE up to tau.
+#
+# Run load.R first to generate data/rz2013_data.rds.
 
 # Read packages
 library("tidyverse")

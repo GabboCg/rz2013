@@ -1,19 +1,28 @@
-#'---
-#' title: Table 6.1 – Monthly U.S. Equity Premium Out-of-Sample Forecasting
-#'         Results Based on Individual Economic Variables, 1957:01–2010:12
-#'
-#' Rapach & Zhou (2013), Chapter 6, Handbook of Economic Forecasting Vol. 2A
-#'
-#' Run refs/data_prep.R first to generate data/refs_datasets.rds.
-#'
-#' Panel A: Unrestricted predictive regression forecasts
-#' Panel B: Campbell & Thompson (2008) sign restrictions
-#' Columns: Overall | Expansion | Recession
-#'          R2OS(%) [p-val]  Delta(annual %)
-#'
-#' R2OS computed with LOG equity premium (paper p.353).
-#' Utility gain (Delta) computed with SIMPLE equity premium (footnote 28).
-#'---
+#!/usr/bin/env Rscript
+# ======================================================== #
+#
+#                 Replication of Table 6.1
+#
+#                 Gabriel E. Cabrera-Guzmán
+#                The University of Manchester
+#
+#                        Spring, 2026
+#
+#                https://gcabrerag.rbind.io
+#
+# ------------------------------ #
+# email: gabriel.cabreraguzman@postgrad.manchester.ac.uk
+# ======================================================== #
+
+# Run refs/load.R first to generate data/rz2013_data.rds.
+#
+# Panel A: Unrestricted predictive regression forecasts
+# Panel B: Campbell & Thompson (2008) sign restrictions
+# Columns: Overall | Expansion | Recession
+#          R2OS(%) [p-val]  Delta(annual %)
+#
+# R2OS computed with LOG equity premium (paper p.353).
+# Utility gain (Delta) computed with SIMPLE equity premium (footnote 28).
 
 # Read packages
 library("tidyverse")

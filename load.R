@@ -1,19 +1,30 @@
-#'---
-#' title: Data preparation – refs/ table scripts
-#' Rapach & Zhou (2013), Handbook of Economic Forecasting Vol. 2A
-#'
-#' Loads the Goyal-Welch Excel file, renames all long column names to
-#' short ones, builds every dataset needed by Table6_1.R and Table6_2.R,
-#' and saves them to data/refs_datasets.rds.
-#'
-#' Outputs (list):
-#'   data_log  – log equity premium + 14 predictors  (for R2OS)
-#'   data_sim  – simple equity premium + 14 predictors (for Delta)
-#'   sink_data – 12-predictor kitchen-sink dataset
-#'   sop_data  – sum-of-the-parts variables
-#'   rf_lag    – lagged risk-free rate
-#'   rec       – NBER recession indicator
-#'---
+#!/usr/bin/env Rscript
+# ======================================================== #
+#
+#             Loading and Variable Construction
+#
+#                 Gabriel E. Cabrera-Guzmán
+#                The University of Manchester
+#
+#                        Spring, 2026
+#
+#                https://gcabrerag.rbind.io
+#
+# ------------------------------ #
+# email: gabriel.cabreraguzman@postgrad.manchester.ac.uk
+# ======================================================== #
+
+# Loads the Goyal-Welch Excel file, renames all long column names to
+# short ones, builds every dataset needed by Table6_1.R and Table6_2.R,
+# and saves them to data/rz2013_data.rds.
+#
+# Outputs (list):
+#   data_log  – log equity premium + 14 predictors  (for R2OS)
+#   data_sim  – simple equity premium + 14 predictors (for Delta)
+#   sink_data – 12-predictor kitchen-sink dataset
+#   sop_data  – sum-of-the-parts variables
+#   rf_lag    – lagged risk-free rate
+#   rec       – NBER recession indicator
 
 # Read packages
 library("tidyverse")
@@ -21,7 +32,7 @@ library("janitor")
 library("readxl")
 
 # Read dataset
-raw <- readxl::read_xls("data-raw/handbook_data.xls", sheet = 1)
+raw <- readxl::read_xls("data-raw/PredictorData2013.xls", sheet = 1)
 
 # Rename ALL long Goyal-Welch column names to short names 
 raw_short <- raw |>
