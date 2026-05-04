@@ -24,10 +24,10 @@
 # R2OS computed with LOG equity premium (paper p.353).
 # Utility gain (Delta) computed with SIMPLE equity premium (footnote 28).
 
-# Read packages
+# Load packages
 library("tidyverse")
 
-# Read auxiliary functions
+# Load auxiliary functions
 source("R/asset-alloc.R")
 source("R/clark-west.R")
 
@@ -78,7 +78,7 @@ for (i in seq_len(np)) {
     xj <- cbind(xt[, j], 1)
     xp <- c(x[ri, j], 1)
 
-    # Log premium
+    # --- Log premium ---
     b_l <- ols(y_log[2:ri], xj)[, 1]
     fc_ec_log[i, j] <- xp %*% b_l
     same_l <- (bf[j] > 0 && b_l[1] > 0) || (bf[j] < 0 && b_l[1] < 0)
@@ -86,7 +86,7 @@ for (i in seq_len(np)) {
     
     if (fc_ct_log[i, j] < 0) fc_ct_log[i, j] <- 0
 
-    # Simple premium
+    # --- Simple premium ---
     b_s <- ols(y_sim[2:ri], xj)[, 1]
     fc_ec_sim[i, j] <- xp %*% b_s
     same_s <- (bf[j] > 0 && b_s[1] > 0) || (bf[j] < 0 && b_s[1] < 0)
@@ -98,7 +98,7 @@ for (i in seq_len(np)) {
   
 }
 
-# Trim to evaluation period (1957:01 – 2010:12) 
+# --- Trim to evaluation period (1957:01 – 2010:12) ---
 idx_ev <- seq(p0 + 1, np)
 
 actual_log <- y_log[(r_win + p0 + 1):n]
@@ -114,7 +114,7 @@ fc_ct_sim <- fc_ct_sim[idx_ev,]
 idx_rec <- which(rec$recession == 1)
 idx_exp <- which(rec$recession == 0)
 
-# R2OS statistics (log premium) 
+# --- R2OS statistics (log premium) ---
 e_ha <- actual_log - fc_ha_log
 e_ec <- matrix(actual_log, nrow = length(actual_log), ncol = nc) - fc_ec_log
 e_ct <- matrix(actual_log, nrow = length(actual_log), ncol = nc) - fc_ct_log
@@ -138,7 +138,7 @@ for (j in seq_len(nc)) {
   
 }
 
-# Asset allocation / utility gain (simple premium) 
+# --- Asset allocation / utility gain (simple premium) ---
 gamma   <- 5
 win_vol <- 12 * 5
 fc_vol  <- numeric(p)
@@ -164,15 +164,15 @@ u_ct <- matrix(0, nc, 3)
 
 for (i in seq_len(nc)) {
   
-  # Overall
+  # --- Overall ---
   u_ec[i, 1] <- asset_alloc(actual_sim, rf_p, fc_ec_sim[, i], fc_vol, gamma)$util
   u_ct[i, 1] <- asset_alloc(actual_sim, rf_p, fc_ct_sim[, i], fc_vol, gamma)$util
   
-  # Expansion
+  # --- Expansion ---
   u_ec[i, 2] <- asset_alloc(actual_sim[idx_exp], rf_p[idx_exp], fc_ec_sim[idx_exp, i], fc_vol[idx_exp], gamma)$util
   u_ct[i, 2] <- asset_alloc(actual_sim[idx_exp], rf_p[idx_exp], fc_ct_sim[idx_exp, i], fc_vol[idx_exp], gamma)$util
   
-  # Recession
+  # --- Recession ---
   u_ec[i, 3] <- asset_alloc(actual_sim[idx_rec], rf_p[idx_rec], fc_ec_sim[idx_rec, i], fc_vol[idx_rec], gamma)$util
   u_ct[i, 3] <- asset_alloc(actual_sim[idx_rec], rf_p[idx_rec], fc_ct_sim[idx_rec, i], fc_vol[idx_rec], gamma)$util
   

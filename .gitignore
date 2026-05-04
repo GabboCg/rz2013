@@ -1,16 +1,16 @@
+# Claude Code
+CLAUDE.md
+
 # R
 .Rhistory
 .RData
 .Ruserdata
 *.Rproj.user/
-
-# macOS
-.DS_Store
+.Rproj.user
 
 # Docs
 docs/
 refs/*
 
-.Rproj.user
-
-CLAUDE.md
+# macOS
+.DS_Store

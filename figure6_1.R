@@ -23,10 +23,10 @@
 #
 # Run load.R first to generate data/rz2013_data.rds.
 
-# Read packages
+# Load packages
 library("tidyverse")
 
-# Read auxiliary functions
+# Load auxiliary functions
 source("R/asset-alloc.R")   
 source("R/clark-west.R")    
 
@@ -55,7 +55,7 @@ p0 <- (1956 - 1946) * 12 # 120
 p  <- n - r_win - p0 # evaluation period length (648)
 np <- p0 + p
 
-# ── Forecast loop ───────────────────────────────────────────────────────────────
+# --- Forecast loop ---
 fc_ha_log <- numeric(np)
 fc_ec_log <- matrix(0, np, nc)
 fc_ct_log <- matrix(0, np, nc)
@@ -122,7 +122,7 @@ pred_labels  <- paste(pred_letters, pred_names)
 col_major_idx <- seq(1, 14, 1)
 fct_levels    <- pred_labels[col_major_idx]
 
-# Long-format data frame
+# --- Long-format data frame ---
 long_df <- bind_rows(
   tibble(
     date      = rep(dates, nc),
@@ -145,7 +145,7 @@ long_df <- bind_rows(
 # Recession rectangles (ymin/ymax = -Inf/Inf spans whatever the panel y-range is)
 rec_df <- tibble(xmin = rec_starts, xmax = rec_ends)
 
-# Plot
+# --- Plot ---
 ggplot(long_df, aes(x = date, y = cdsfe, colour = type)) +
   geom_rect(
     data        = rec_df,

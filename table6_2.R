@@ -24,10 +24,10 @@
 # R2OS computed with LOG equity premium (paper p.353).
 # Utility gain (Delta) computed with SIMPLE equity premium (footnote 28).
 
-# Read packages
+# Load packages
 library("tidyverse")
 
-# Read auxiliary functions
+# Load auxiliary functions
 source("R/asset-alloc.R")
 source("R/clark-west.R")
 
@@ -100,7 +100,7 @@ fc_dmsfe_sim <- numeric(np)
 fc_di_sim    <- numeric(np)
 fc_sop_sim   <- numeric(np) # Forecasts_monthly.m formula
 
-# Forecast loop
+# --- Forecast loop ---
 for (i in seq_len(np)) {
   
   ri <- r_win + i - 1
@@ -126,7 +126,7 @@ for (i in seq_len(np)) {
 
   if (i > p0) {
 
-    # Kitchen sink: OLS on all 12 sink predictors
+    # --- Kitchen sink: OLS on all 12 sink predictors ---
     xts1    <- cbind(xts, 1)
     xp_sink <- c(xs_mat[ri, ], 1)
     fc_ks_log[i] <- xp_sink %*% ols(yl, xts1)[, 1]
@@ -160,7 +160,7 @@ for (i in seq_len(np)) {
     fc_sic_log[i] <- sic_fc_log[which.min(sic_vals_log)]
     fc_sic_sim[i] <- sic_fc_sim[which.min(sic_vals_sim)]
 
-    # POOL-AVG: simple mean of 14 individual forecasts
+    # --- POOL-AVG: simple mean of 14 individual forecasts ---
     fc_avg_log[i] <- mean(fc_ec_log[i, ])
     fc_avg_sim[i] <- mean(fc_ec_sim[i, ])
 
@@ -202,7 +202,7 @@ for (i in seq_len(np)) {
   
 }
 
-# Non-negativity constrained versions
+# --- Non-negativity constrained versions ---
 fc_ks_log_ct    <- pmax(0, fc_ks_log)
 fc_sic_log_ct   <- pmax(0, fc_sic_log)
 fc_avg_log_ct   <- pmax(0, fc_avg_log)
@@ -216,7 +216,7 @@ fc_dmsfe_sim_ct <- pmax(0, fc_dmsfe_sim)
 fc_di_sim_ct    <- pmax(0, fc_di_sim)
 fc_sop_sim_ct   <- pmax(0, fc_sop_sim)
 
-# Trim to evaluation period (1957:01 – 2010:12)
+# --- Trim to evaluation period (1957:01 – 2010:12) ---
 idx_ev     <- seq(p0 + 1, np)
 actual_log <- y_log[(r_win + p0 + 1):n]
 actual_sim <- y_sim[(r_win + p0 + 1):n]
@@ -241,7 +241,7 @@ fc_sop_sim   <- tr(fc_sop_sim);   fc_sop_sim_ct   <- tr(fc_sop_sim_ct)
 idx_rec <- which(rec$recession == 1)
 idx_exp <- which(rec$recession == 0)
 
-# R2OS statistics (log premium)
+# --- R2OS statistics (log premium) ---
 e_ha <- actual_log - fc_ha_log
 
 # col order: KS | SIC | POOL-AVG | POOL-DMSFE | DI | SOP
@@ -258,15 +258,15 @@ for (j in seq_len(nm)) {
   e_a <- actual_log - fc_mat_a[, j]
   e_b <- actual_log - fc_mat_b[, j]
 
-  # Overall
+  # --- Overall ---
   r2_a[j, 1:2] <- r2os_stat(e_ha, e_a, fc_ha_log, fc_mat_a[, j])
   r2_b[j, 1:2] <- r2os_stat(e_ha, e_b, fc_ha_log, fc_mat_b[, j])
   
-  # Expansion
+  # --- Expansion ---
   r2_a[j, 3:4] <- r2os_stat(e_ha[idx_exp], e_a[idx_exp], fc_ha_log[idx_exp], fc_mat_a[idx_exp, j])
   r2_b[j, 3:4] <- r2os_stat(e_ha[idx_exp], e_b[idx_exp], fc_ha_log[idx_exp], fc_mat_b[idx_exp, j])
   
-  # Recession
+  # --- Recession ---
   r2_a[j, 5:6] <- r2os_stat(e_ha[idx_rec], e_a[idx_rec], fc_ha_log[idx_rec], fc_mat_a[idx_rec, j])
   r2_b[j, 5:6] <- r2os_stat(e_ha[idx_rec], e_b[idx_rec], fc_ha_log[idx_rec], fc_mat_b[idx_rec, j])
   
@@ -289,13 +289,13 @@ rf_p <- rf_lag[(r_win + p0 + 1):(r_win + p0 + p)]
 
 u_ha    <- numeric(3)
 
-# Overall
+# --- Overall ---
 u_ha[1] <- asset_alloc(actual_sim, rf_p, fc_ha_sim, fc_vol, gamma)$util
 
-# Expansion
+# --- Expansion ---
 u_ha[2] <- asset_alloc(actual_sim[idx_exp], rf_p[idx_exp], fc_ha_sim[idx_exp], fc_vol[idx_exp], gamma)$util
 
-# Recession
+# --- Recession ---
 u_ha[3] <- asset_alloc(actual_sim[idx_rec], rf_p[idx_rec], fc_ha_sim[idx_rec], fc_vol[idx_rec], gamma)$util
 
 # col order: KS | SIC | POOL-AVG | POOL-DMSFE | DI | SOP
@@ -307,15 +307,15 @@ u_b <- matrix(0, nm, 3)
 
 for (i in seq_len(nm)) {
   
-  # Overall
+  # --- Overall ---
   u_a[i, 1] <- asset_alloc(actual_sim, rf_p, fc_sim_a[, i], fc_vol, gamma)$util
   u_b[i, 1] <- asset_alloc(actual_sim, rf_p, fc_sim_b[, i], fc_vol, gamma)$util
   
-  # Expansion
+  # --- Expansion ---
   u_a[i, 2] <- asset_alloc(actual_sim[idx_exp], rf_p[idx_exp], fc_sim_a[idx_exp, i], fc_vol[idx_exp], gamma)$util
   u_b[i, 2] <- asset_alloc(actual_sim[idx_exp], rf_p[idx_exp], fc_sim_b[idx_exp, i], fc_vol[idx_exp], gamma)$util
   
-  # Recession
+  # --- Recession ---
   u_a[i, 3] <- asset_alloc(actual_sim[idx_rec], rf_p[idx_rec], fc_sim_a[idx_rec, i], fc_vol[idx_rec], gamma)$util
   u_b[i, 3] <- asset_alloc(actual_sim[idx_rec], rf_p[idx_rec], fc_sim_b[idx_rec, i], fc_vol[idx_rec], gamma)$util
   

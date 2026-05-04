@@ -26,7 +26,7 @@
 #   rf_lag    – lagged risk-free rate
 #   rec       – NBER recession indicator
 
-# Read packages
+# Load packages
 library("tidyverse")
 library("janitor")
 library("readxl")
@@ -141,7 +141,7 @@ rec <- raw_short |>
   filter(!is.na(nber_pk), date >= 195701) |>
   select(date, recession = nber_pk)
 
-# Save to RDS
+# --- Save to RDS ---
 saveRDS(
   list(
     data_log  = data_log,
