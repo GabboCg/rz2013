@@ -66,7 +66,7 @@ for (i in seq_len(np)) {
   
   fc_ha_log[i] <- mean(y_log[1:ri])
   xt <- as.matrix(x[1:(ri - 1), ])
-
+  
   for (j in seq_len(nc)) {
     
     xj  <- cbind(xt[, j], 1)
@@ -115,7 +115,7 @@ rec_ends   <- dates[which(diff(c(rec_flag, 0L)) == -1L)]
 
 # Panel labels and column-major factor levels for facet_wrap(dir = "v")
 pred_names   <- c("log(DP)", "log(DY)", "log(EP)", "log(DE)", "SVAR", "BM", 
-                   "NTIS", "TBL", "LTY", "LTR", "TMS", "DFY", "DFR", "INFL")
+                  "NTIS", "TBL", "LTY", "LTR", "TMS", "DFY", "DFR", "INFL")
 pred_letters <- paste0("(", letters[1:14], ")")
 pred_labels  <- paste(pred_letters, pred_names)
 

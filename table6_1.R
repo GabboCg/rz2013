@@ -72,12 +72,12 @@ for (i in seq_len(np)) {
   fc_ha_log[i] <- mean(y_log[1:ri])
   fc_ha_sim[i] <- mean(y_sim[1:ri])
   xt <- as.matrix(x[1:(ri - 1),])
-
+  
   for (j in seq_len(nc)) {
     
     xj <- cbind(xt[, j], 1)
     xp <- c(x[ri, j], 1)
-
+    
     # --- Log premium ---
     b_l <- ols(y_log[2:ri], xj)[, 1]
     fc_ec_log[i, j] <- xp %*% b_l
@@ -85,7 +85,7 @@ for (i in seq_len(np)) {
     fc_ct_log[i, j] <- if (same_l) fc_ec_log[i, j] else fc_ha_log[i]
     
     if (fc_ct_log[i, j] < 0) fc_ct_log[i, j] <- 0
-
+    
     # --- Simple premium ---
     b_s <- ols(y_sim[2:ri], xj)[, 1]
     fc_ec_sim[i, j] <- xp %*% b_s
@@ -217,10 +217,10 @@ cat("\nPanel A: Unrestricted predictive regression forecasts\n")
 for (j in seq_len(nc)) {
   
   cat(sprintf("%-10s  %s  %s  %s\n",
-    predictors[j],
-    fmt_row(r2_ec[j, 1], r2_ec[j, 2], delta_ec[j, 1]),
-    fmt_row(r2_ec[j, 3], r2_ec[j, 4], delta_ec[j, 2]),
-    fmt_row(r2_ec[j, 5], r2_ec[j, 6], delta_ec[j, 3])
+              predictors[j],
+              fmt_row(r2_ec[j, 1], r2_ec[j, 2], delta_ec[j, 1]),
+              fmt_row(r2_ec[j, 3], r2_ec[j, 4], delta_ec[j, 2]),
+              fmt_row(r2_ec[j, 5], r2_ec[j, 6], delta_ec[j, 3])
   ))
   
 }
@@ -229,10 +229,10 @@ cat("\nPanel B: Campbell & Thompson (2008) restrictions\n")
 for (j in seq_len(nc)) {
   
   cat(sprintf("%-10s  %s  %s  %s\n",
-    predictors[j],
-    fmt_row(r2_ct[j, 1], r2_ct[j, 2], delta_ct[j, 1]),
-    fmt_row(r2_ct[j, 3], r2_ct[j, 4], delta_ct[j, 2]),
-    fmt_row(r2_ct[j, 5], r2_ct[j, 6], delta_ct[j, 3])
+              predictors[j],
+              fmt_row(r2_ct[j, 1], r2_ct[j, 2], delta_ct[j, 1]),
+              fmt_row(r2_ct[j, 3], r2_ct[j, 4], delta_ct[j, 2]),
+              fmt_row(r2_ct[j, 5], r2_ct[j, 6], delta_ct[j, 3])
   ))
   
 }

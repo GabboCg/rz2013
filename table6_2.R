@@ -107,13 +107,13 @@ for (i in seq_len(np)) {
   
   fc_ha_log[i] <- mean(y_log[1:ri])
   fc_ha_sim[i] <- mean(y_sim[1:ri])
-
+  
   xt  <- x_mat[1:(ri - 1), , drop = FALSE] # (ri-1) x 14
   xts <- xs_mat[1:(ri - 1), , drop = FALSE] # (ri-1) x 12
   yl  <- y_log[2:ri] # (ri-1) log-premium outcomes
   ys  <- y_sim[2:ri] # (ri-1) simple-premium outcomes
   Tk  <- ri - 1L # training sample size
-
+  
   # Individual predictive regression forecasts (needed for POOL-AVG / DMSFE)
   for (j in seq_len(nc)) {
     
@@ -123,22 +123,22 @@ for (i in seq_len(np)) {
     fc_ec_sim[i, j] <- xp %*% ols(ys, xj)[, 1]
     
   }
-
+  
   if (i > p0) {
-
+    
     # --- Kitchen sink: OLS on all 12 sink predictors ---
     xts1    <- cbind(xts, 1)
     xp_sink <- c(xs_mat[ri, ], 1)
     fc_ks_log[i] <- xp_sink %*% ols(yl, xts1)[, 1]
     fc_ks_sim[i] <- xp_sink %*% ols(ys, xts1)[, 1]
-
+    
     # SIC: BIC model selection over 1-/2-/3-predictor subsets
     # Criterion: log(RSS/T) + log(T)*k/T  (k = predictors + intercept)
     sic_vals_log <- numeric(n_sic)
     sic_vals_sim <- numeric(n_sic)
     sic_fc_log <- numeric(n_sic)
     sic_fc_sim <- numeric(n_sic)
-
+    
     for (km in seq_len(n_sic)) {
       
       sel  <- sic_combos[[km]]
@@ -146,11 +146,11 @@ for (i in seq_len(np)) {
       xpjk <- c(xs_mat[ri, sel], 1)
       kk   <- length(sel) + 1L
       qr_jk <- qr(Xjk)
-
+      
       e_l <- qr.resid(qr_jk, yl)
       sic_vals_log[km] <- log(sum(e_l ^ 2) / Tk) + log(Tk) * kk / Tk
       sic_fc_log[km] <- xpjk %*% qr.coef(qr_jk, yl)
-
+      
       e_s <- qr.resid(qr_jk, ys)
       sic_vals_sim[km] <- log(sum(e_s ^ 2) / Tk) + log(Tk) * kk / Tk
       sic_fc_sim[km] <- xpjk %*% qr.coef(qr_jk, ys)
@@ -159,11 +159,11 @@ for (i in seq_len(np)) {
     
     fc_sic_log[i] <- sic_fc_log[which.min(sic_vals_log)]
     fc_sic_sim[i] <- sic_fc_sim[which.min(sic_vals_sim)]
-
+    
     # --- POOL-AVG: simple mean of 14 individual forecasts ---
     fc_avg_log[i] <- mean(fc_ec_log[i, ])
     fc_avg_sim[i] <- mean(fc_ec_sim[i, ])
-
+    
     # POOL-DMSFE: discounted MSFE-weighted average
     # omega_j ∝ 1 / sum_{s=1}^{i-1} theta^{i-1-s} * e_{s,j}^2
     # Errors accumulated over holdout + past evaluation (steps 1 to i-1)
@@ -176,7 +176,7 @@ for (i in seq_len(np)) {
     m_s <- colSums(w_d * err_s ^ 2)
     fc_dmsfe_log[i] <- sum(fc_ec_log[i, ] * (1 / m_l) / sum(1 / m_l))
     fc_dmsfe_sim[i] <- sum(fc_ec_sim[i, ] * (1 / m_s) / sum(1 / m_s))
-
+    
     # Diffusion index: first principal component of 14 predictors
     # Standardise all ri observations → PCA → regress on first r_di PCs
     x_std   <- scale(x_mat[1:ri, ])
@@ -188,12 +188,12 @@ for (i in seq_len(np)) {
     qr_di   <- qr(cbF)
     fc_di_log[i] <- c(F_pred, 1) %*% qr.coef(qr_di, yl)
     fc_di_sim[i] <- c(F_pred, 1) %*% qr.coef(qr_di, ys)
-
+    
     # Sum-of-the-parts
     # Log version (Forecasts_monthly_log.m): 20yr-MA log earnings growth
     #   + log(1+D/P) - log(1+rf)   → used for R2OS
     fc_sop_log[i] <- mean(sop_data$e_growth_log[(ri - ma_sop + 1):ri]) + sop_data$dp_sop_log[ri] - sop_data$rf_sop_log[ri]
-
+    
     # Simple version (Forecasts_monthly.m): 20yr-MA simple earnings growth
     #   + D/P - rf   → used for Delta
     fc_sop_sim[i] <- mean(sop_data$e_growth_sim[(ri - ma_sop + 1):ri]) + sop_data$dp_sop_sim[ri] - sop_data$rf_sop_sim[ri]
@@ -257,7 +257,7 @@ for (j in seq_len(nm)) {
   
   e_a <- actual_log - fc_mat_a[, j]
   e_b <- actual_log - fc_mat_b[, j]
-
+  
   # --- Overall ---
   r2_a[j, 1:2] <- r2os_stat(e_ha, e_a, fc_ha_log, fc_mat_a[, j])
   r2_b[j, 1:2] <- r2os_stat(e_ha, e_b, fc_ha_log, fc_mat_b[, j])
@@ -358,10 +358,10 @@ cat("\nPanel A: Unrestricted forecasts\n")
 for (j in seq_len(nm)) {
   
   cat(sprintf("%-17s  %s  %s  %s\n",
-    methods[j],
-    fmt_row(r2_a[j, 1], r2_a[j, 2], delta_a[j, 1]),
-    fmt_row(r2_a[j, 3], r2_a[j, 4], delta_a[j, 2]),
-    fmt_row(r2_a[j, 5], r2_a[j, 6], delta_a[j, 3])
+              methods[j],
+              fmt_row(r2_a[j, 1], r2_a[j, 2], delta_a[j, 1]),
+              fmt_row(r2_a[j, 3], r2_a[j, 4], delta_a[j, 2]),
+              fmt_row(r2_a[j, 5], r2_a[j, 6], delta_a[j, 3])
   ))
   
 }
@@ -370,10 +370,10 @@ cat("\nPanel B: Forecasts with non-negativity restrictions\n")
 for (j in seq_len(nm)) {
   
   cat(sprintf("%-16s  %s  %s  %s\n",
-    methods[j],
-    fmt_row(r2_b[j, 1], r2_b[j, 2], delta_b[j, 1]),
-    fmt_row(r2_b[j, 3], r2_b[j, 4], delta_b[j, 2]),
-    fmt_row(r2_b[j, 5], r2_b[j, 6], delta_b[j, 3])
+              methods[j],
+              fmt_row(r2_b[j, 1], r2_b[j, 2], delta_b[j, 1]),
+              fmt_row(r2_b[j, 3], r2_b[j, 4], delta_b[j, 2]),
+              fmt_row(r2_b[j, 5], r2_b[j, 6], delta_b[j, 3])
   ))
   
 }
